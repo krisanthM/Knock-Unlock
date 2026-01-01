@@ -1,177 +1,196 @@
-# Knock Unlock 🔐  
-*A Rhythm‑Based Authentication System*
+🔐 Knock Unlock
+A Rhythm-Based Authentication System
+📌 Overview
 
----
+Knock Unlock is a secure and intuitive authentication system that grants access using a unique knock rhythm captured through a microphone. Instead of relying on traditional passwords or computationally heavy machine learning models, the system authenticates users by analyzing the time gaps between consecutive knocks.
 
-## 📌 Overview
-Knock Unlock is a secure authentication system that grants access using a unique knock rhythm captured via a microphone. Instead of traditional passwords or complex machine learning models, the system authenticates users based on the **time gaps between consecutive knocks**, making it reliable, explainable, and lightweight.
+This makes the system lightweight, explainable, and reliable, especially in physical environments. The project was developed as part of a hackathon challenge to explore alternative authentication mechanisms using sound and temporal patterns.
 
-This project was developed as part of a hackathon challenge to explore alternative authentication mechanisms using sound and temporal patterns.
+❓ Problem Statement
 
----
+Traditional authentication methods such as passwords, PINs, and unlock patterns have inherent limitations:
 
-## ❓ Problem Statement
-Traditional authentication methods such as passwords, PINs, and patterns suffer from several drawbacks:
-- They can be observed or stolen
-- Users tend to reuse weak credentials
-- They are not intuitive in physical environments
+Susceptible to observation and shoulder-surfing
 
-There is a need for an authentication mechanism that is:
-- Hard to guess
-- Easy to use
-- Resistant to casual observation
+Weak or reused credentials reduce security
 
----
+Not intuitive for physical or embedded systems
 
-## 💡 Proposed Solution
-Knock Unlock introduces **rhythm‑based authentication**, where a user unlocks access by performing a specific knock pattern on a surface.
+There is a clear need for an authentication method that is:
 
-The system:
-1. Records audio via a microphone
-2. Detects individual knock events
-3. Extracts the time gaps between knocks
-4. Compares the rhythm against a stored reference pattern
-5. Grants or denies access based on tolerance‑based matching
+Hard to guess
 
-This approach avoids heavy machine learning and instead relies on **deterministic time‑gap analysis**, which is more stable for small datasets.
+Easy to perform
 
----
+Resistant to casual observation
 
-## ⭐ Key Features
-- 🎤 Microphone‑based knock detection  
-- ⏱️ Time‑gap (rhythm‑based) pattern recognition  
-- 🔐 Deterministic and explainable authentication  
-- ⚡ Lightweight and real‑time execution  
-- ❌ No machine learning required  
-- 📉 Low false acceptance rate  
+Suitable for real-world physical interaction
 
----
+💡 Proposed Solution
 
-## 🧠 Why Not Machine Learning?
-Machine learning models (CNN/LSTM with MFCC features) were initially explored. However:
-- Knock sounds are highly similar in spectral features
-- Small datasets led to unstable training
-- Accuracy plateaued due to overlapping features
+Knock Unlock introduces rhythm-based authentication, where access is granted only when the user performs a predefined knock pattern on a surface.
 
-Since knock authentication relies primarily on **rhythm**, a deterministic time‑gap approach proved:
-- More reliable
-- Easier to explain
-- Faster at runtime
-- Better suited for real‑world use
+Authentication Flow:
 
----
+Audio is recorded via a microphone
 
-## 🏗️ System Architecture
+Individual knock events are detected
+
+Time gaps between consecutive knocks are extracted
+
+The extracted rhythm is compared with a stored reference
+
+Access is granted or denied using tolerance-based matching
+
+This solution avoids complex ML pipelines and instead relies on deterministic time-gap analysis, which is more stable for small datasets and real-time use.
+
+⭐ Key Features
+
+Microphone-based knock detection
+
+Time-gap (rhythm-based) authentication
+
+Deterministic and explainable logic
+
+Lightweight and real-time execution
+
+No machine learning required
+
+Low false acceptance rate
+
+🧠 Why Not Machine Learning?
+
+Machine learning models such as CNNs and LSTMs using MFCC features were initially explored. However:
+
+Knock sounds have very similar spectral characteristics
+
+Small datasets resulted in unstable model training
+
+Feature overlap caused accuracy to plateau
+
+Since knock authentication fundamentally depends on rhythm, a deterministic approach proved to be:
+
+More reliable
+
+Faster at runtime
+
+Easier to debug and explain
+
+Better suited for embedded and real-world environments
+
+🏗️ System Architecture
 Microphone
-↓
+   ↓
 Audio Recording
-↓
+   ↓
 Knock Detection
-↓
+   ↓
 Time Gap Extraction
-↓
+   ↓
 Rhythm Matching
-↓
+   ↓
 Access Granted / Denied
 
+🛠️ Technical Approach
 
----
+Record knock audio using a microphone
 
-## 🛠️ Technical Approach
-1. Record knock audio using a microphone
-2. Detect knock peaks using energy thresholding
-3. Extract inter‑knock time intervals
-4. Enroll multiple correct samples to compute:
-   - Mean time gaps
-   - Standard deviation
-5. Normalize gaps using ratio‑based comparison
-6. Authenticate using tolerance‑based matching
+Detect knock peaks using energy-based thresholding
 
----
+Extract inter-knock time intervals
 
-## 📁 Project Structure
+Enroll multiple valid samples to compute:
+
+Mean time gaps
+
+Standard deviation
+
+Normalize time gaps using ratio-based comparison
+
+Authenticate using tolerance-based matching
+
+📁 Project Structure
 knock-unlock/
-├── record_knock.py # Records fresh audio from microphone
-├── extract_gaps.py # Detects knocks and extracts time gaps
-├── enroll_pattern.py # Enrollment / calibration
-├── verify_pattern.py # Authentication logic
-├── pattern.json # Stored reference knock pattern
+├── record_knock.py        # Records knock audio from microphone
+├── extract_gaps.py        # Detects knocks and extracts time gaps
+├── enroll_pattern.py     # Enrollment and calibration
+├── verify_pattern.py     # Authentication logic
+├── pattern.json          # Stored reference knock pattern
 ├── requirements.txt
 └── README.md
 
----
+⚙️ Setup Instructions
+🔧 Prerequisites
 
----
+Python 3.9 or higher
 
-## ⚙️ Setup Instructions  
+Working microphone
 
-### Prerequisites  
-- Python 3.9 or higher  
-- Working microphone  
-
-### Install Dependencies  
-```bash
+📦 Install Dependencies
 pip install sounddevice numpy scipy librosa
-🔐 Enrollment (One‑Time Setup)
+
+🔐 Enrollment (One-Time Setup)
+
 Enroll the authorized knock rhythm:
 
-bash
 python enroll_pattern.py
+
+
 During enrollment:
 
 5 valid knock samples are recorded
 
 Knock count consistency is enforced
 
-Mean and standard deviation are computed
+Mean and standard deviation are calculated
 
-Pattern is saved to pattern.json
+Pattern is stored in pattern.json
 
 🔓 Authentication
-For every authentication attempt:
 
-bash
+For each authentication attempt:
+
 python record_knock.py
 python verify_pattern.py
-Output
+
+Output:
+
 ✅ GRANTED → Access allowed
+
 ❌ DENIED → Access rejected
 
 One retry is allowed before final denial.
 
 ☁️ Google Technologies Used
+
 Google Cloud Platform (GCP) – Cloud infrastructure
 
 Firebase (Firestore) – Backend logging
 
-TensorFlow Lite (Explored) – Used during experimentation
+TensorFlow Lite – Explored during experimentation
 
 🔒 Security Considerations
-Unique rhythm acts as a temporal password
 
-Inconsistent knock counts are rejected
+Knock rhythm acts as a temporal password
+
+Inconsistent knock counts are automatically rejected
 
 Deterministic logic reduces false acceptance
 
-No sensitive biometric data stored
-
-⚠️ Limitations
-Highly inconsistent knocking may cause false rejection
-
-Designed primarily for single‑user authentication
-
-Very noisy environments may affect detection
+No sensitive biometric or spectral data is stored
 
 🚀 Future Enhancements
-Multi‑user enrollment
 
-GUI‑based authentication
+Multi-user enrollment support
+
+GUI-based authentication interface
 
 Adaptive tolerance tuning
 
-OS‑level unlock integration
+OS-level or IoT-level unlock integration
 
 🧪 Demo Flow
+
 Run enrollment
 
 Perform correct knock → ✅ GRANTED
@@ -179,5 +198,5 @@ Perform correct knock → ✅ GRANTED
 Perform incorrect knock → ❌ DENIED
 
 🏁 Conclusion
-Knock Unlock demonstrates a secure and intuitive authentication system using rhythm‑based knock patterns.
-By leveraging deterministic time‑gap analysis instead of machine learning, the system achieves higher stability, explainability, and real‑time performance — suitable for hackathon and real‑world use.
+
+Knock Unlock demonstrates a secure, intuitive, and efficient authentication mechanism using rhythm-based knock patterns. By leveraging deterministic time-gap analysis instead of machine learning, the system achieves:
